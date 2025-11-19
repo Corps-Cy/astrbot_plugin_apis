@@ -15,6 +15,13 @@ class RequestManager:
         self.api_key_dict = parse_api_keys(config.get("api_keys", []).copy())
         self.api_sites = list(self.api_key_dict.keys())
         self.api = api_manager
+        # 打印解析的API密钥信息（用于调试）
+        if self.api_key_dict:
+            logger.info(f"[初始化] 已解析 {len(self.api_key_dict)} 个API密钥配置")
+            for domain, key in self.api_key_dict.items():
+                logger.info(f"[初始化] API站点: {domain}, 密钥: {key[:10]}..." if len(key) > 10 else f"[初始化] API站点: {domain}, 密钥: {key}")
+        else:
+            logger.debug("[初始化] 未配置API密钥")
 
     async def request(self,
         urls: list[str], params: Optional[dict] = None, test_mode:bool=False
@@ -25,11 +32,23 @@ class RequestManager:
                 # 检查是否需要添加API密钥到请求头
                 headers = None
                 base_url = self.api.extract_base_url(u)
+                logger.debug(f"[请求日志] URL: {u}")
+                logger.debug(f"[请求日志] 提取的base_url: {base_url}")
+                logger.debug(f"[请求日志] 配置的API站点: {list(self.api_key_dict.keys())}")
+                
                 if base_url in self.api_key_dict:
                     api_key = self.api_key_dict[base_url]
                     headers = {"ckey": api_key}
+                    logger.info(f"[请求日志] 找到匹配的API密钥，base_url: {base_url}, 已添加ckey到请求头")
+                else:
+                    logger.debug(f"[请求日志] base_url {base_url} 未在配置中找到，不添加ckey")
+                
+                logger.debug(f"[请求日志] 请求参数: {params}")
+                logger.debug(f"[请求日志] 请求头: {headers}")
                 
                 async with self.session.get(u, params=params, headers=headers, timeout=30) as resp:
+                    logger.debug(f"[请求日志] 响应状态码: {resp.status}")
+                    logger.debug(f"[请求日志] 响应头: {dict(resp.headers)}")
                     resp.raise_for_status()
                     if test_mode:
                         return
