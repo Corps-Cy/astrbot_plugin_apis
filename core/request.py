@@ -26,29 +26,31 @@ class RequestManager:
     async def request(self,
         urls: list[str], params: Optional[dict] = None, test_mode:bool=False
     ) -> Union[bytes, str, dict, None]:
+        logger.info(f"[请求日志] ===== 开始请求 =====")
+        logger.info(f"[请求日志] URLs: {urls}")
         last_exc = None
         for u in urls:
             try:
                 # 检查是否需要添加API密钥到请求头
                 headers = None
                 base_url = self.api.extract_base_url(u)
-                logger.debug(f"[请求日志] URL: {u}")
-                logger.debug(f"[请求日志] 提取的base_url: {base_url}")
-                logger.debug(f"[请求日志] 配置的API站点: {list(self.api_key_dict.keys())}")
+                logger.info(f"[请求日志] 当前请求URL: {u}")
+                logger.info(f"[请求日志] 提取的base_url: {base_url}")
+                logger.info(f"[请求日志] 配置的API站点列表: {list(self.api_key_dict.keys())}")
                 
                 if base_url in self.api_key_dict:
                     api_key = self.api_key_dict[base_url]
                     headers = {"ckey": api_key}
-                    logger.info(f"[请求日志] 找到匹配的API密钥，base_url: {base_url}, 已添加ckey到请求头")
+                    logger.info(f"[请求日志] ✓ 找到匹配的API密钥，base_url: {base_url}, 已添加ckey到请求头")
                 else:
-                    logger.debug(f"[请求日志] base_url {base_url} 未在配置中找到，不添加ckey")
+                    logger.info(f"[请求日志] ✗ base_url {base_url} 未在配置中找到，不添加ckey")
                 
-                logger.debug(f"[请求日志] 请求参数: {params}")
-                logger.debug(f"[请求日志] 请求头: {headers}")
+                logger.info(f"[请求日志] 请求参数: {params}")
+                logger.info(f"[请求日志] 请求头: {headers}")
                 
                 async with self.session.get(u, params=params, headers=headers, timeout=30) as resp:
-                    logger.debug(f"[请求日志] 响应状态码: {resp.status}")
-                    logger.debug(f"[请求日志] 响应头: {dict(resp.headers)}")
+                    logger.info(f"[请求日志] 响应状态码: {resp.status}")
+                    logger.info(f"[请求日志] 响应头: {dict(resp.headers)}")
                     resp.raise_for_status()
                     if test_mode:
                         return
@@ -72,6 +74,8 @@ class RequestManager:
         target: str = "",
     ) -> tuple[str | None, bytes | None]:
         """对外接口，获取数据"""
+        logger.info(f"[get_data] ===== 开始获取数据 =====")
+        logger.info(f"[get_data] URLs: {urls}, params: {params}, api_type: {api_type}, target: {target}")
 
         data = await self.request(urls, params)
 
