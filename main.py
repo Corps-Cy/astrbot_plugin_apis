@@ -236,18 +236,14 @@ class APIsPlugin(Star):
                  source = "api" 表示来自网络
                  source = "local" 表示来自本地兜底
         """
-        logger.debug(f"[call_api] ===== 开始调用API =====")
-        logger.debug(f"[call_api] API名称: {api_data.get('name')}, URLs: {api_data.get('urls')}, params: {params or api_data.get('params')}")
         try:
             # === 外部接口调用 ===
-            logger.debug(f"[call_api] 准备调用 web.get_data()")
             api_text, api_byte = await self.web.get_data(
                 urls=api_data["urls"],
                 params=params or api_data["params"],
                 api_type=api_data["type"],
                 target=api_data["target"],
             )
-            logger.debug(f"[call_api] web.get_data() 返回成功, text: {bool(api_text)}, byte: {bool(api_byte)}")
             if api_text or api_byte:
                 saved_text, saved_path = await self.local.save_data(
                     api_type=api_data["type"],
