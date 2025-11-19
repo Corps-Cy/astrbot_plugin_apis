@@ -22,7 +22,14 @@ class RequestManager:
         last_exc = None
         for u in urls:
             try:
-                async with self.session.get(u, params=params, timeout=30) as resp:
+                # 检查是否需要添加API密钥到请求头
+                headers = None
+                base_url = self.api.extract_base_url(u)
+                if base_url in self.api_key_dict:
+                    api_key = self.api_key_dict[base_url]
+                    headers = {"ckey": api_key}
+                
+                async with self.session.get(u, params=params, headers=headers, timeout=30) as resp:
                     resp.raise_for_status()
                     if test_mode:
                         return
