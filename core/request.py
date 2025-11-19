@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import asyncio
+import traceback
 from collections import defaultdict
 from typing import Optional, Union
 import aiohttp
@@ -48,19 +49,36 @@ class RequestManager:
                 if api_key and "ckey" not in request_params:
                     request_params["ckey"] = api_key
                 
+                # 打印请求参数
+                logger.info(f"[请求] URL: {u}")
+                logger.info(f"[请求] 参数: {request_params}")
+                
                 async with self.session.get(u, params=request_params, timeout=30) as resp:
                     resp.raise_for_status()
                     if test_mode:
                         return
                     ct = resp.headers.get("Content-Type", "").lower()
+                    
+                    # 根据响应类型获取数据并打印
                     if "application/json" in ct:
-                        return await resp.json()
+                        data = await resp.json()
+                        logger.info(f"[响应] 状态码: {resp.status}, 类型: JSON, 数据: {data}")
+                        return data
                     if "text/" in ct:
-                        return (await resp.text()).strip()
-                    return await resp.read()
+                        data = (await resp.text()).strip()
+                        # 限制文本长度，避免日志过长
+                        data_preview = data[:500] + "..." if len(data) > 500 else data
+                        logger.info(f"[响应] 状态码: {resp.status}, 类型: TEXT, 数据: {data_preview}")
+                        return data
+                    data = await resp.read()
+                    logger.info(f"[响应] 状态码: {resp.status}, 类型: BINARY, 数据长度: {len(data)} bytes")
+                    return data
             except Exception as e:
                 last_exc = e
-                logger.error(f"请求失败 {u}:{e}")
+                # 打印详细的异常信息
+                error_detail = traceback.format_exc()
+                logger.error(f"[请求失败] URL: {u}, 参数: {request_params}, 错误: {e}")
+                logger.error(f"[请求失败] 详细错误信息:\n{error_detail}")
         if last_exc:
             raise last_exc
 
