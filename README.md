@@ -4,11 +4,11 @@
 
 # astrbot_plugin_apis
 
-_✨ [astrbot](https://github.com/Soulter/AstrBot) API聚合插件 ✨_
+_✨ API聚合插件 ✨_
 
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![License](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.html)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
-[![AstrBot](https://img.shields.io/badge/AstrBot-3.4%2B-orange.svg)](https://github.com/Soulter/AstrBot)
+[![AstrBot](https://img.shields.io/badge/AstrBot-4.0%2B-orange.svg)](https://github.com/Soulter/AstrBot)
 [![GitHub](https://img.shields.io/badge/作者-Zhalslar-blue)](https://github.com/Zhalslar)
 
 </div>
@@ -19,17 +19,7 @@ API聚合插件，海量免费API动态添加，热门API：看看腿、看看�
 
 ## 📦 安装
 
-- 可以直接在astrbot的插件市场搜索astrbot_plugin_apis，点击安装即可  
-
-- 或者可以直接克隆源码到插件文件夹：
-
-```bash
-# 克隆仓库到插件目录
-cd /AstrBot/data/plugins
-git clone https://github.com/Zhalslar/astrbot_plugin_apis
-
-# 控制台重启AstrBot
-```
+在astrbot的插件市场搜索astrbot_plugin_apis，点击安装即可  
 
 ## ⚙️ 配置
 
@@ -170,6 +160,7 @@ git clone https://github.com/Zhalslar/astrbot_plugin_apis
 本插件收录的免费api大多来自下面的站点，希望有能力的使用者可以赞助一下。另外如有某个api失效，可在各站点间找平替。
 
 - 枫林API：<https://api.yuafeng.cn>
+- 枫林API二代: <https://api-v2.yuafeng.cn>
 - 稳定API：<https://api.xingchenfu.xyz>
 - 倾梦API：<https://api.317ak.cn>， 此站点需注册账号获取ckey密钥！！
 - 星之阁API：<https://api.xingzhige.com>
@@ -177,3 +168,4 @@ git clone https://github.com/Zhalslar/astrbot_plugin_apis
 - 糖豆子API：<https://api.tangdouz.com>
 - PearAPI：<https://api.pearktrue.cn>
 - 问情免费API：<https://free.wqwlkj.cn>
+- 龙珠API: <https://sdkapi.hhlqilongzhu.cn>
